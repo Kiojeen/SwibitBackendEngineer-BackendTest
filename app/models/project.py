@@ -9,13 +9,13 @@ from app.db.base import Base
 
 # To prevent circular imports
 if TYPE_CHECKING:
-    from .homework import Homework
+    from .task import Task
 
 
-class Course(Base):
-    __tablename__ = "course"
+class Project(Base):
+    __tablename__ = "project"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title: Mapped[str] = mapped_column(Text, nullable=False)
 
-    homeworks: Mapped[List["Homework"]] = relationship(back_populates="course")
+    tasks: Mapped[List["Task"]] = relationship(back_populates="project")

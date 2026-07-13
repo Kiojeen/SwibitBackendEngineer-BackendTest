@@ -3,14 +3,17 @@ import uuid
 from pydantic import BaseModel
 
 
-class CourseCreate(BaseModel):
+class ProjectCreate(BaseModel):
     title: str
 
 
-class CourseRead(BaseModel):
+class ProjectRead(BaseModel):
     id: uuid.UUID
     title: str
 
     model_config = {
         "from_attributes": True
     }
+
+class ProjectUpdate(BaseModel):
+    title: str

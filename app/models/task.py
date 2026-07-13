@@ -10,16 +10,16 @@ from app.db.base import Base
 
 # To prevent circular imports
 if TYPE_CHECKING:
-    from .course import Course
+    from .project import Project
 
 
-class Homework(Base):
-    __tablename__ = "homework"
+class Task(Base):
+    __tablename__ = "task"
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
     title: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[str] = mapped_column(Text, default="pending")
 
-    course_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("course.id"))
+    project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("project.id"))
 
-    course: Mapped["Course"] = relationship(back_populates="homeworks")
+    project: Mapped["Project"] = relationship(back_populates="tasks")
