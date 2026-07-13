@@ -28,6 +28,10 @@ async def get_projects(session: AsyncSession = Depends(get_async_session)):
 async def get_project_by_id(project_id: uuid.UUID, session: AsyncSession = Depends(get_async_session)):
     return await project_service.get_project_by_id(project_id=project_id, session=session)
 
-@router.post("/")
+@router.patch("/{project_id}")
 async def update_project(project: ProjectCreate, session: AsyncSession = Depends(get_async_session)):
+    pass
+
+@router.delete("/{project_id}")
+async def delete_project(project_id: uuid.UUID, session: AsyncSession = Depends(get_async_session)):
     pass

@@ -1,10 +1,11 @@
+import uuid
 from typing import List
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.task import Task
-from app.schemas.task import TaskCreate
+from app.schemas.task import TaskCreate, TaskUpdate
 
 
 class TaskRepository:
@@ -25,6 +26,16 @@ class TaskRepository:
         result = await session.execute(select(Task).order_by(Task.title))
 
         return result.scalars().all()
+
+    async def get_by_id(self, task_id: uuid.UUID, session: AsyncSession) -> Task:
+        result = await session.execute(select(Task).where(Task.id == task_id))
+        return result.scalar_one_or_none()
+
+    async def update(self, task_id: uuid.UUID, task: TaskUpdate) -> Task:
+        pass
+
+    async def delete(self, task_id: uuid.UUID, session: AsyncSession):
+        pass
 
 
 task_repository = TaskRepository()

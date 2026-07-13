@@ -17,3 +17,7 @@ class TaskRead(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+class TaskUpdate(BaseModel):
+    title: str
+    status: str
