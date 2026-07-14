@@ -16,3 +16,6 @@ __pycache__/
 # OS Generated Files
 .DS_Store
 
+# Export Files
+exports/
+

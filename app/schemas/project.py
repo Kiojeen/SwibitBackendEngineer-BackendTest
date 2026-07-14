@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 from pydantic import BaseModel
 
@@ -10,6 +11,8 @@ class ProjectCreate(BaseModel):
 class ProjectRead(BaseModel):
     id: uuid.UUID
     title: str
+    created_at: datetime
+    updated_at: datetime
 
     model_config = {
         "from_attributes": True
