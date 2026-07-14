@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 
 from app.db.base import Base
+import app.models # noqa: F401
 
 load_dotenv()
 
