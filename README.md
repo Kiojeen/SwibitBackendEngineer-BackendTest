@@ -81,15 +81,15 @@ Copy `.env.example` to `.env` and configure:
 
 | Variable | Description | Default |
 |---|---|---|
-| `DB_USER` | PostgreSQL user | `myuser` |
-| `DB_PASSWORD` | PostgreSQL password | `mysecretpassword` |
-| `DB_NAME` | PostgreSQL database name | `mydatabase` |
+| `DB_USER` | PostgreSQL user | *(generate your own)* |
+| `DB_PASSWORD` | PostgreSQL password | *(generate your own)* |
+| `DB_NAME` | PostgreSQL database name | *(generate your own)* |
 | `DATABASE_URL` | Async PostgreSQL connection string | `postgresql+asyncpg://...` |
 | `REDIS_URL` | Redis connection string | `redis://localhost:6379/0` |
 | `JWT_SECRET` | Secret key for JWT token signing | *(generate your own)* |
 | `MINIO_ENDPOINT` | MinIO server address | `localhost:9000` |
-| `MINIO_ACCESS_KEY` | MinIO access key | `minioadmin` |
-| `MINIO_SECRET_KEY` | MinIO secret key | `minioadmin` |
+| `MINIO_ACCESS_KEY` | MinIO access key | *(generate your own)* |
+| `MINIO_SECRET_KEY` | MinIO secret key | *(generate your own)* |
 | `MINIO_BUCKET` | MinIO bucket for export files | `exports` |
 | `MINIO_SECURE` | Use HTTPS for MinIO | `false` |
 
