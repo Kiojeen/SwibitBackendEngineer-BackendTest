@@ -4,20 +4,16 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.project import Project
-from app.schemas.project import ProjectCreate, ProjectUpdate
+from app.schemas.project import ProjectUpdate
 
 
 class ProjectRepository:
-    async def create(self, project: ProjectCreate, session: AsyncSession) -> Project:
-        project_db = Project(
-            title=project.title,
-        )
-
-        session.add(project_db)
+    async def create(self, project: Project, session: AsyncSession) -> Project:
+        session.add(project)
         await session.commit()
-        await session.refresh(project_db)
+        await session.refresh(project)
 
-        return project_db
+        return project
 
     async def get_all(self, session: AsyncSession):
         projects = await session.execute(select(Project).order_by(Project.title))
@@ -33,7 +29,6 @@ class ProjectRepository:
 
     async def delete(self, project_id: uuid.UUID, session: AsyncSession):
         pass
-
 
 
 project_repository = ProjectRepository()
