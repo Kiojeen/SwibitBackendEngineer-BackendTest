@@ -16,4 +16,4 @@ class ProjectRead(BaseModel):
     }
 
 class ProjectUpdate(BaseModel):
-    title: str
+    title: str | None = None
