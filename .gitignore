@@ -15,3 +15,5 @@ __pycache__/
 
 # OS Generated Files
 .DS_Store
+
+swibitbackendengineer_backendtest.egg-info/
