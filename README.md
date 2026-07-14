@@ -115,10 +115,17 @@ Exporting user data is handled asynchronously. The API creates a job record and 
 
 - **Single Celery worker container.** The worker uses `--pool=prefork --concurrency=4` for parallel task processing. For higher throughput, the `--concurrency` value can be increased, or multiple worker replicas can be added to docker-compose.
 - **MinIO without TLS.** The default configuration uses `MINIO_SECURE=false`. Suitable for local development; should be secured in any shared environment.
-- **No rate limiting.** The API does not implement request throttling.
 - **Tokens expire after 1 hour.** There is no refresh token flow; clients must re-authenticate.
 
 
 ## AI Tools Used
 
 - **DeepSeek V4 Flash Free (opencode)**: Used for automating basic CRUD operations, generating tests and helped writing the README.md file.
+
+---
+
+## References and Tutorials
+
+- **FastAPI Users Documentations:** [Website Link](https://fastapi-users.github.io/fastapi-users)
+- **Getting Started With Celery Asynchronous Tasks in Python:** [Youtube Link](https://youtu.be/VRHVEporra0?si=yJdr2ViNwhNX0hpc)
+- **Learn Fast API With This One Project:** [Youtube Link](https://youtu.be/SR5NYCdzKkc?si=ysGrx6ltrsUslngL)
