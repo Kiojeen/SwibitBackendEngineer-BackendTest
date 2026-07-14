@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.project import Project
 from app.models.user import User
 from app.repositories.project_repository import project_repository
-from app.schemas.project import ProjectCreate, ProjectUpdate, ProjectRead
+from app.schemas.project import ProjectCreate, ProjectUpdate, ProjectRead, ProjectPaginated
 
 
 class ProjectService:
@@ -17,8 +17,10 @@ class ProjectService:
         )
         return await project_repository.create(project=project, session=session)
 
-    async def get_projects(self, user: User, session: AsyncSession, offset: int = 0, limit: int = 10):
-        return await project_repository.get_by_user_id(user_id=user.id, session=session, offset=offset, limit=limit)
+    async def get_projects(self, user: User, session: AsyncSession, offset: int = 0, limit: int = 10) -> ProjectPaginated:
+        items = await project_repository.get_by_user_id(user_id=user.id, session=session, offset=offset, limit=limit)
+        total = await project_repository.count_by_user_id(user_id=user.id, session=session)
+        return ProjectPaginated(items=items, total=total, offset=offset, limit=limit)
 
     async def get_project_by_id(self, project_id: uuid.UUID, user: User, session: AsyncSession) -> Project:
         project = await project_repository.get_by_id(project_id=project_id, session=session)

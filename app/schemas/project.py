@@ -20,3 +20,10 @@ class ProjectRead(BaseModel):
 
 class ProjectUpdate(BaseModel):
     title: str | None = None
+
+
+class ProjectPaginated(BaseModel):
+    items: list[ProjectRead]
+    total: int
+    offset: int
+    limit: int

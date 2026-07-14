@@ -27,3 +27,10 @@ class TaskRead(BaseModel):
 class TaskUpdate(BaseModel):
     title: str | None = None
     status: TaskStatus | None = None
+
+
+class TaskPaginated(BaseModel):
+    items: list[TaskRead]
+    total: int
+    offset: int
+    limit: int

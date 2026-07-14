@@ -1,7 +1,7 @@
 import uuid
 from typing import List
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.task import Task
@@ -25,6 +25,14 @@ class TaskRepository:
             ).order_by(Task.title).offset(offset).limit(limit)
         )
         return result.scalars().all()
+
+    async def count_by_user_id(self, user_id: uuid.UUID, session: AsyncSession) -> int:
+        result = await session.execute(
+            select(func.count()).select_from(Task).join(Task.project).where(
+                Task.project.has(user_id=user_id)
+            )
+        )
+        return result.scalar_one()
 
     async def get_by_id(self, task_id: uuid.UUID, session: AsyncSession) -> Task:
         result = await session.execute(select(Task).where(Task.id == task_id))

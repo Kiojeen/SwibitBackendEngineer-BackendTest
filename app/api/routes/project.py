@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.users import current_active_user
 from app.db.session import get_async_session
 from app.models.user import User
-from app.schemas.project import ProjectCreate, ProjectRead, ProjectUpdate
+from app.schemas.project import ProjectCreate, ProjectPaginated, ProjectRead, ProjectUpdate
 from app.services.project_service import project_service
 
 router = APIRouter(
@@ -25,7 +25,7 @@ async def create_project(
     return await project_service.create_project(project_data=project, user=user, session=session)
 
 
-@router.get("/", response_model=list[ProjectRead])
+@router.get("/", response_model=ProjectPaginated)
 async def get_projects(
         offset: int = 0,
         limit: int = 10,

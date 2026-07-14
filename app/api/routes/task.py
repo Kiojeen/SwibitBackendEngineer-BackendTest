@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.users import current_active_user
 from app.db.session import get_async_session
 from app.models.user import User
-from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
+from app.schemas.task import TaskCreate, TaskPaginated, TaskRead, TaskUpdate
 from app.services.task_service import task_service
 
 router = APIRouter(
@@ -22,7 +22,7 @@ async def create_task(
 ):
     return await task_service.create_task(task_data=task, user=user, session=session)
 
-@router.get("/", response_model=list[TaskRead])
+@router.get("/", response_model=TaskPaginated)
 async def get_tasks(
         user: User = Depends(current_active_user),
         session: AsyncSession = Depends(get_async_session),

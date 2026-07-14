@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.project import Project
@@ -20,6 +20,12 @@ class ProjectRepository:
             select(Project).where(Project.user_id == user_id).order_by(Project.title).offset(offset).limit(limit)
         )
         return projects.scalars().all()
+
+    async def count_by_user_id(self, user_id: uuid.UUID, session: AsyncSession) -> int:
+        result = await session.execute(
+            select(func.count()).select_from(Project).where(Project.user_id == user_id)
+        )
+        return result.scalar_one()
 
     async def get_by_id(self, project_id: uuid.UUID, session: AsyncSession) -> Project:
         project = await session.execute(select(Project).where(Project.id == project_id))

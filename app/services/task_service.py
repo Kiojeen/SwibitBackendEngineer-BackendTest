@@ -8,7 +8,7 @@ from app.models.task import Task
 from app.models.user import User
 from app.repositories.project_repository import project_repository
 from app.repositories.task_repository import task_repository
-from app.schemas.task import TaskCreate, TaskUpdate
+from app.schemas.task import TaskCreate, TaskUpdate, TaskPaginated
 
 
 class TaskService:
@@ -24,8 +24,10 @@ class TaskService:
         task = Task(title=task_data.title, project_id=task_data.project_id, status=task_data.status)
         return await task_repository.create(task=task, session=session)
 
-    async def get_tasks(self, user: User, session: AsyncSession, offset: int = 0, limit: int = 10) -> List[Task]:
-        return await task_repository.get_by_user_id(user_id=user.id, session=session, offset=offset, limit=limit)
+    async def get_tasks(self, user: User, session: AsyncSession, offset: int = 0, limit: int = 10) -> TaskPaginated:
+        items = await task_repository.get_by_user_id(user_id=user.id, session=session, offset=offset, limit=limit)
+        total = await task_repository.count_by_user_id(user_id=user.id, session=session)
+        return TaskPaginated(items=items, total=total, offset=offset, limit=limit)
 
     async def get_task_by_id(self, task_id: uuid.UUID, user: User, session: AsyncSession) -> Task:
         task = await task_repository.get_by_id(task_id=task_id, session=session)
