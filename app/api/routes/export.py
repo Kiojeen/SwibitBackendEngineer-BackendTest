@@ -1,12 +1,12 @@
-import os
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.users import current_active_user
 from app.db.session import get_async_session
+from app.minio_client import MINIO_BUCKET, minio_client
 from app.models.user import User
 from app.schemas.export import ExportRead
 from app.services.export_service import export_service
@@ -54,6 +54,20 @@ async def download_export(
         session: AsyncSession = Depends(get_async_session),
 ):
     export = await export_service.get_export_by_id(export_id=export_id, user=user, session=session)
-    if export.status != "completed" or not export.file_path or not os.path.exists(export.file_path):
+    if export.status != "completed" or not export.file_path:
         raise HTTPException(status_code=404, detail="Export file not available.")
-    return FileResponse(export.file_path, filename=os.path.basename(export.file_path), media_type="text/csv")
+
+    try:
+        obj = minio_client.get_object(MINIO_BUCKET, export.file_path)
+        data = obj.read()
+        obj.close()
+        obj.release_conn()
+    except Exception:
+        raise HTTPException(status_code=404, detail="Export file not available.")
+
+    filename = export.file_path.split("/")[-1]
+    return Response(
+        content=data,
+        media_type="application/json",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )

@@ -1,27 +1,18 @@
 import json
-import os
 from datetime import datetime
+from io import BytesIO
 
 from app.celery_app import celery_app
 from app.db.session import get_sync_session
+from app.minio_client import MINIO_BUCKET, ensure_bucket, minio_client
 from app.models.export import Export
 from app.models.project import Project
 from app.models.task import Task
 
-EXPORT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "..", "exports")
-
-
-def _serialize(obj):
-    if hasattr(obj, "isoformat"):
-        return obj.isoformat()
-    if hasattr(obj, "value"):
-        return obj.value
-    return str(obj)
-
 
 @celery_app.task
 def export_user_data(export_id: str):
-    os.makedirs(EXPORT_DIR, exist_ok=True)
+    ensure_bucket()
 
     session = get_sync_session()
     try:
@@ -45,30 +36,35 @@ def export_user_data(export_id: str):
                 "id": str(project.id),
                 "title": project.title,
                 "user_id": str(project.user_id),
-                "created_at": _serialize(project.created_at),
-                "updated_at": _serialize(project.updated_at),
+                "created_at": project.created_at.isoformat(),
+                "updated_at": project.updated_at.isoformat(),
                 "tasks": [
                     {
                         "id": str(task.id),
                         "title": task.title,
-                        "status": _serialize(task.status),
+                        "status": task.status,
                         "project_id": str(task.project_id),
-                        "created_at": _serialize(task.created_at),
-                        "updated_at": _serialize(task.updated_at),
+                        "created_at": task.created_at.isoformat(),
+                        "updated_at": task.updated_at.isoformat(),
                     }
                     for task in tasks
                 ],
             }
             data["projects"].append(project_data)
 
-        file_name = f"export_{export_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        file_path = os.path.join(EXPORT_DIR, file_name)
+        content = json.dumps(data, indent=2).encode("utf-8")
+        object_key = f"exports/{export_id}.json"
 
-        with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
+        minio_client.put_object(
+            MINIO_BUCKET,
+            object_key,
+            BytesIO(content),
+            len(content),
+            content_type="application/json",
+        )
 
         export.status = "completed"
-        export.file_path = file_path
+        export.file_path = object_key
         session.commit()
 
     except Exception:
