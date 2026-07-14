@@ -124,6 +124,12 @@ Exporting user data is handled asynchronously. The API creates a job record and 
 
 ---
 
+## Bonus Task
+
+- **GitHub CI Action** which runs tests on push requests
+
+---
+
 ## References and Tutorials
 
 - **FastAPI Users Documentations:** [Website Link](https://fastapi-users.github.io/fastapi-users)
