@@ -120,7 +120,7 @@ Exporting user data is handled asynchronously. The API creates a job record and 
 
 ## AI Tools Used
 
-- **DeepSeek V4 Flash Free (opencode)**: Used for automating basic CRUD operations, generating tests and helped writing the README.md file.
+- **DeepSeek V4 Flash Free (opencode)**: Used for automating basic CRUD operations, generating tests and helped writing README.md, DESIGN.md and TESTING.md file.
 
 ---
 

@@ -11,19 +11,12 @@ from contextlib import asynccontextmanager
 from app.api.users import auth_backend, fastapi_users
 from app.api.routes import export_router, project_router, task_router
 from app.schemas.user import UserRead, UserCreate
-from app.db.session import create_db_and_tables
 from fastapi import FastAPI
 
 import app.tasks.user_tasks
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await create_db_and_tables()
-    yield
-
-
-app = FastAPI(title="Swibit Backend Engineer Backend Test", lifespan=lifespan)
+app = FastAPI(title="Swibit Backend Engineer Backend Test")
 
 app.state.limiter = limiter
 
