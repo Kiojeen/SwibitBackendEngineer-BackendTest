@@ -63,7 +63,7 @@ services:
 
   worker:
     build: .
-    command: celery -A app.celery_app worker --loglevel=info --pool=prefork --concurrency=4
+    command: uv run celery -A app.celery_app worker --loglevel=info --pool=prefork --concurrency=4
     environment:
       DATABASE_URL: postgresql+asyncpg://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
       REDIS_URL: redis://redis:6379/0
